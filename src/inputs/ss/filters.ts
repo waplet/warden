@@ -3,6 +3,24 @@ enum Condition {
   Used = '6752',
 }
 
+enum Series {
+  S103 = '67',
+  S104 = '68',
+  S119 = '69',
+  S467 = '70',
+  S602 = '71',
+  Czech = '73',
+  Hruschov = '76',
+  Lithuania = '72',
+  Family = '74',
+  BeforeWar = '79',
+  Private = '77',
+  Renovated = '3616',
+  Spec = '78',
+  Stalin = '75',
+  New = '3596',
+}
+
 enum FuelType {
   Gasoline = '493',
   Diesel = '494',
@@ -36,6 +54,36 @@ enum FridgeType {
   French = '113151',
 }
 
+enum RegionType {
+  All = '0',
+  Riga = 'riga_f',
+}
+
+enum CpuType {
+  AMDAPU = '113162',
+  AMDAthlon = '677',
+  AMDCore = '113164',
+  AMDDuron = '676',
+  AMDFX = '113157',
+  AMDOpteron = '113159',
+  AMDPhenom = '113160',
+  AMDPhenomII = '113161',
+  AMDRyzen = '114661',
+  AMDSempron = '113163',
+  AMDThreadripper = '114662',
+  AMDTurion = '113158',
+  IntelAtom = '113168',
+  IntelCeleron = '114664',
+  IntelCore2 = '27717',
+  IntelCorei3 = '113165',
+  IntelCorei5 = '113166',
+  IntelCorei7 = '113167',
+  IntelCorei9 = '114663',
+  IntelPentium = '114665',
+  IntelXeon = '27718',
+  Other = '678',
+}
+
 type AllRequiredFilterOptions = {
   // Generic
   priceMin: number
@@ -43,6 +91,9 @@ type AllRequiredFilterOptions = {
   yearMin: number
   yearMax: number
   condition: Condition
+  series: Series
+  region: string | RegionType
+  name: string | CpuType
 
   // Real estate
   roomsMin: 1 | 2 | 3 | 4 | 5 | 6
@@ -94,7 +145,18 @@ const filterDefinitions: FilterDefinitions = {
     selector: '#f_o_352',
     name: 'Condition',
   },
-
+  series: {
+    selector: '#f_o_6',
+    name: 'Series',
+  },
+  region: {
+    selector: '#region_select',
+    name: 'Region',
+  },
+  name: {
+    selector: '#f_o_39',
+    name: 'Name',
+  },
   roomsMin: {
     selector: "[name='topt[1][min]']",
     name: 'Rooms min',
@@ -161,8 +223,11 @@ export {
   FilterDefinitions,
   FilterOptions,
   Condition,
+  Series,
   FuelType,
   Transmission,
   BodyType,
   FridgeType,
+  RegionType,
+  CpuType,
 }
