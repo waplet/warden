@@ -11,7 +11,7 @@ import {
   InputReturn,
   OutputReturn,
 } from './types'
-import config from './config'
+import config from './configs/config.ss'
 
 const isInput = (input: Job['inputs'][0]): input is InputReturn =>
   _.isFunction(input)

@@ -18,8 +18,8 @@ type Result = {
   description: string
   imageUrl: string
   extra: {
-    price: string,
-    address: string,
+    price: string
+    address: string
   }
 }
 
@@ -140,9 +140,11 @@ const parseResults = async (page: Page, section: string) => {
         assert(thumbnailUrl, 'Could not find thumbnailUrl!')
         const imageUrl = thumbnailUrl.replace('th2', '800')
 
-          const cells = await $row.$$('td')
-          const address = await cells[3].evaluate(($) => $.innerText.replace('\n', ' - '));
-          assert(address, 'Could not find address');
+        const cells = await $row.$$('td')
+        const address = await cells[3].evaluate(($) =>
+          $.innerText.replace('\n', ' - '),
+        )
+        assert(address, 'Could not find address')
 
         const $priceCell = _.last(cells)
         assert($priceCell, 'Could not find $priceCell!')
@@ -151,19 +153,18 @@ const parseResults = async (page: Page, section: string) => {
         const price = await $priceAnchor.evaluate(($) => $.textContent)
         assert(price, 'Could not find price!')
 
-          return {
-            id,
-            name,
-            url,
-            description,
-            imageUrl,
-            extra: {
-              price,
-              address,
-            },
-          }
-        },
-      ),
+        return {
+          id,
+          name,
+          url,
+          description,
+          imageUrl,
+          extra: {
+            price,
+            address,
+          },
+        }
+      }),
     ),
     _.isUndefined,
   ) as Result[]
