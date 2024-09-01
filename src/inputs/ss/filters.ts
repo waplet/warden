@@ -84,6 +84,15 @@ enum CpuType {
   Other = '678',
 }
 
+enum LandUsageType {
+  MultiStory = '6729',
+  Commercial = '6727',
+  SummerHouse = '6733',
+  Private = '6728',
+  Village = '6732',
+  Other = '3644',
+}
+
 type AllRequiredFilterOptions = {
   // Generic
   priceMin: number
@@ -114,6 +123,9 @@ type AllRequiredFilterOptions = {
 
   // Electronics
   fridgeType: FridgeType
+
+  // Land
+  landUsageType: LandUsageType
 }
 
 type FilterOptions = Partial<AllRequiredFilterOptions>
@@ -215,6 +227,11 @@ const filterDefinitions: FilterDefinitions = {
     selector: '#f_o_1663',
     name: 'Fridge type',
   },
+
+  landUsageType: {
+    selector: '#f_o_228',
+    name: 'Land usage type',
+  }
 }
 
 export {
@@ -230,4 +247,5 @@ export {
   FridgeType,
   RegionType,
   CpuType,
+  LandUsageType,
 }
