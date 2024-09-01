@@ -1,6 +1,7 @@
 import _ from 'lodash'
 
 import { Input } from '../../types'
+import assert from '../../assert'
 import withBrowser from '../../withBrowser'
 
 type Options = {
@@ -19,27 +20,26 @@ type Result = {
 
 const HOST = 'https://news.ycombinator.com'
 
-const ycombinator: Input<Options | undefined> = (
-  options?: Options,
-) => async () => {
-  const section = options?.section ?? 'hottest'
+const ycombinator: Input<Options | undefined> =
+  (options?: Options) => async () => {
+    const section = options?.section ?? 'hottest'
 
-  let results: Result[] = []
+    let results: Result[] = []
 
-  await withBrowser(async ({ page }) => {
-    const pageUrl = `${HOST}/${section === 'hottest' ? '' : section}`
+    await withBrowser(async ({ page }) => {
+      const pageUrl = `${HOST}/${section === 'hottest' ? '' : section}`
 
-    await page.goto(pageUrl)
+      await page.goto(pageUrl)
 
-    const rows = await page.$$('.itemlist tr.athing, .itemlist tr.athing + tr')
+      const $rows = await page.$$('tr.athing, tr.athing + tr')
 
-    results = await Promise.all(
-      _.map(
-        _.chunk(rows, 2),
-        async ([$story, $meta]): Promise<Result> => {
+      results = await Promise.all(
+        _.map(_.chunk($rows, 2), async ([$story, $meta]): Promise<Result> => {
           const id = await $story.evaluate(($) => $.id)
 
-          const $link = await $story.$('.storylink')
+          const $link = await $story.$('.titleline a')
+
+          assert($link, 'Link element not found!')
 
           const $score = await $meta.$('.score')
 
@@ -52,19 +52,18 @@ const ycombinator: Input<Options | undefined> = (
 
           return {
             id,
-            name: await $link!.evaluate(($) => $.textContent!),
-            url: await $link!.evaluate(($) => ($ as HTMLAnchorElement).href),
+            name: await $link.evaluate(($) => $.textContent!),
+            url: await $link.evaluate(($) => ($ as HTMLAnchorElement).href),
             extra: {
               score,
               commentsUrl: `${HOST}/item?id=${id}`,
             },
           }
-        },
-      ),
-    )
-  })
+        }),
+      )
+    })
 
-  return results
-}
+    return results
+  }
 
 export default ycombinator

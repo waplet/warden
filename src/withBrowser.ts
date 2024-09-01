@@ -11,13 +11,18 @@ export default async (
 ) => {
   const timeout = config.browser?.timeout ?? 30 * 1000
 
-  const driver = playwright.webkit
+  const driver = playwright[config?.browser?.driver ?? 'webkit']
 
   const browser = await driver.launch({
     timeout,
     headless: config.browser?.headless ?? true,
     slowMo: config.browser?.slowMo ?? 0,
-    dumpio: config.browser?.debug ?? false,
+    logger: {
+      isEnabled: () => config.browser?.debug ?? false,
+      log: (name, _severity, message, _args) => {
+        console.log(name, message)
+      },
+    },
   })
 
   const context = await browser.newContext()
